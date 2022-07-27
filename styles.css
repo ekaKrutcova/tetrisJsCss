@@ -1,0 +1,140 @@
+#tetris{
+    width: 330px;
+    margin: 5px auto;
+    padding: 30px;
+    background-color: #222;
+    border-radius: 15px;
+    font-family: monospace;
+    color:#fff;
+    text-transform: uppercase;
+}
+#screen{
+    width: 240px;
+    min-height: 300px;
+    margin: 0 auto;
+    display: flex;
+    background-color: #a5ac8d;
+    border: 30px solid #222;
+    border-radius: 15px;
+    outline: 2px solid white;
+    box-shadow: 0 0 5px black inset;
+    padding: 5px;
+    color: #000;
+    position: relative;
+} 
+#screen:before{
+    content: "SIMBA'S";
+    color: #fff;
+    display: block;
+    position: absolute;
+    top: -55px;
+    font-size: 2em;
+    background: #222;
+    padding: 10px;
+} 
+.screen_5-8_{
+    width: 150px;
+}
+.screen_3-8_{
+    width: 60px;
+    padding: 15px;
+    font: 1em monospace;
+    text-transform: uppercase;
+}   
+.grid{
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.square{
+    margin: 3px;
+    outline: 2px solid #9ea488;
+    border: 2px solid #a5ac8d;
+    padding: 2px;
+    width: 1px;
+    height: 1px;
+    background: #9ea488;
+}
+.preview{
+    width: 60px;
+}
+.tetromino{
+    outline: 2px solid #222;
+    background: #222;
+}
+#control-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 1px 5px rgb(0 0 0 / 50%) inset;
+    border-radius: 30px;
+    margin-top: 30px;
+    padding: 20px 40px 0;
+}
+#move-buttons{
+    display: grid;
+    padding: 20px 40px 0;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+}
+#control-buttons .screen_5-8_{
+    display: flex;
+    justify-content: space-between;
+}
+.move-buttons{
+    display: grid;
+    grid-template-areas:
+            "a a a" 
+            "b c d"
+            "e e e";
+}
+.control{
+    margin: 0 auto;
+}
+button{
+    background: #fff200;
+    box-shadow: 0px 3px 2px #fff inset;
+    border: 1px solid #fff200; 
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    cursor: pointer;
+}
+.move-buttons button{
+    width: 35px;
+    height: 35px;
+}
+#rotate{
+    width: 70px;
+    height: 70px;
+    font-weight: 600;
+    text-shadow: 1px 1px #f9f7d3;
+    font-size: 1em;
+    color: #d1c602;
+}
+.control p{
+    text-transform: uppercase;
+    font-size: 9px;
+    color: #fff;
+    margin: 5px 0 0;
+    text-align: center;
+}
+#logo{
+    font-size: 2em;
+    padding: 0 30px;
+}
+
+.powerOff{
+    background: #f43131;
+    border: 1px solid red;
+    box-shadow: 0px 3px 2px #e39494 inset;
+}
+
+.powerOn{
+    border: 1px solid #bcea00;
+    background: #94ee3c;
+}
+
+.disable{
+    color: #9ea488;
+}
