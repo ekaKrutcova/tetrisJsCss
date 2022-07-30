@@ -15,25 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
     //190 191 192 193 194 195 196 197 198 199
     // this way we have oportutity to access element by №id squares[id]
 
-    //a set of functions describing the general orientation of tetraminos in the grid
-    //  0   1   2   3   ...
-    // 10  11  12  13   ...
-    // 20  21  22  23   ...
-    // 30  11  32  33   ...
-    // ...
-
     function get_L_Tetromino(width) {
         return [
             [1, width + 1, 2 * width + 1, 2],
             [width, width + 1, width + 2, 2 * width + 2],
             [1, width + 1, 2 * width + 1, 2 * width],
-            [width, 2 * width, 2 * width + 1, 2 * width + 2]
+            [0, width, width + 1, width + 2]
         ]
     }
     function get_J_Tetromino(width) {
         return [
             [0, 1, width + 1, 2 * width + 1],
-            [2 * width, 2 * width + 1, 2 * width + 2, width + 2],
+            [width, width + 1, width + 2, 2],
             [1, width + 1, 2 * width + 1, 2 * width + 2],
             [width, width + 1, width + 2, 2 * width]
         ]
@@ -82,31 +75,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const tetrominoes = [get_L_Tetromino(width), get_J_Tetromino(width), get_Z_Tetromino(width), get_S_Tetromino(width), get_T_Tetromino(width), get_II_Tetromino(width), get_I_Tetromino(width)]
     const tetrominoesPreview = [get_L_Tetromino(reviewWidth)[0], get_J_Tetromino(reviewWidth)[0], get_Z_Tetromino(reviewWidth)[0], get_S_Tetromino(reviewWidth)[0], get_T_Tetromino(reviewWidth)[0], get_II_Tetromino(reviewWidth)[0], get_I_Tetromino(reviewWidth)[0]]
 
-    // tetromino always begins to move in the ~middle of grid 0 1 2 3 4 5 6 7 8 9
+    // tetromino always begins to move in the ~middle of grid 0 ... |4| ... 9
     const initPosition = 4
     let position = initPosition
     let orientation = 0
-
     let random = getRandom()
     let nextRandom = getRandom()
-
     let tetrominoDisposition = tetrominoes[random][orientation]
     let tetrominoPreviewDisposition = tetrominoesPreview[nextRandom]
 
     const scoreDisplay = document.querySelector('#score')
     let score = 0
 
-    const speedDisplay = document.querySelector('#speed')
-    const speeds = ['I', 'II', 'III']
+    const levelDisplay = document.querySelector('#level')
+    const levels = ['', '*', '**', '***', '****', '*****']
     let level = 0
-    let speed
+    let levelWeight = 200
+    let speedLevel = 0
+
+    // indicators
+    const pauseIndicator = document.querySelector("#pauseIndicator")
+    const soundIndicator = document.querySelector("#soundIndicator")
+    const resetIndicator = document.querySelector("#resetIndicator")
+    //----------------------------
 
     // control buttons
-    const powerControl = document.querySelector('#power')
+    const powerControl = document.querySelector('#powerControl')
     const soundControl = document.querySelector('#soundControl')
-    const controlStart = document.querySelector('#start')
+    const startControl = document.querySelector('#startControl')
+
     let timerId = null
-    let pause = false
     //----------------------------
 
     // sounds
@@ -128,117 +126,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keyup', keyControl)
 
-    const spiralRanges = [
-        generateRange(0, 9),
-        generateRange(19, 199, 10),
-        generateRange(198, 190, -1),
-        generateRange(180, 10, -10),
-    
-        generateRange(11, 18),
-        generateRange(28, 188, 10),
-        generateRange(187, 181, -1),
-        generateRange(171, 21, -10),
-    
-        generateRange(22, 27),
-        generateRange(37, 177, 10),
-        generateRange(176, 172, -1),
-        generateRange(162, 32, -10),
-    
-        generateRange(33, 36),
-        generateRange(46, 166, 10),
-        generateRange(165, 163, -1),
-        generateRange(153, 43, -10),
-    
-        generateRange(44, 45),
-        generateRange(55, 155, 10),
-        generateRange(154, 54, -10)
-        ]
-
-    const circlesRanges = [
-        generateRange(0, 9),
-        generateRange(19, 199, 10),
-        generateRange(198, 190, -1),
-        generateRange(180, 10, -10),
-    
-        // generateRange(11, 18),
-        // generateRange(28, 188, 10),
-        // generateRange(187, 181, -1),
-        // generateRange(171, 21, -10),
-    
-        generateRange(22, 27),
-        generateRange(37, 177, 10),
-        generateRange(176, 172, -1),
-        generateRange(162, 32, -10),
-    
-        // generateRange(33, 36),
-        // generateRange(46, 166, 10),
-        // generateRange(165, 163, -1),
-        // generateRange(153, 43, -10),
-    
-        generateRange(44, 45),
-        generateRange(55, 155, 10),
-        generateRange(154, 54, -10)
-    ]
-    function generatePath(ranges){
-        let path = []
-        ranges.forEach( range => path = path.concat(range) )
-        return path
+    function getSpiral() {
+        let spiral = []
+        for (let i = 0; i < 5; i++) {
+            spiral = spiral.concat(generateRange(11 * i, 9 * (1 + i), 1))
+            spiral = spiral.concat(generateRange(10 + 9 * (1 + i), 199 - 11 * i, 10))
+            spiral = spiral.concat(generateRange(198 - 11 * i, 190 - 9 * i, -1))
+            spiral = spiral.concat(generateRange(180 - 9 * i, 10 + 11 * i, -10))
+        }
+        return spiral
     }
+    const spiral = getSpiral()
     // -------------------------------------------
 
     powerControl.addEventListener('click', () => {
         IsTetrisOn = powerControl.classList.contains("powerOn")
-        // нажали кнопку выключения
+        // нажали кнопку выключения при включенном тетрисе
         if (IsTetrisOn) {
-            clearInterval(timerId)
-            timerId = null
+            //off
             powerControl.classList.remove("powerOn")
             powerControl.classList.add("powerOff")
 
+            clearInterval(timerId)
+            timerId = null
+
             clearGrid()
             clearPreview()
-            info.classList.add('disable')
+            levelDisplay.innerHTML = ''
+            scoreDisplay.innerHTML = ''
 
-            isPlaying = tetrisSound.classList.contains('playing')
-
+            isPlaying = !soundIndicator.classList.contains('disable')
             if (isPlaying) {
-                tetrisSound.classList.remove('playing')
                 tetrisSound.pause()
                 tetrisSound.currentTime = 0
+                soundIndicator.classList.add('disable')
             }
-
+            disableIndicators()
         } else {
-            // включить экран, сбросить игру
             powerControl.classList.remove("powerOff")
-            info.classList.remove('disable')
             powerControl.classList.add("powerOn")
+            levelDisplay.innerHTML = levels[level]
+            scoreDisplay.innerHTML = score
         }
     })
 
-    controlStart.addEventListener('click', () => {
+    startControl.addEventListener('click', () => {
+        IsTetrisOn = powerControl.classList.contains("powerOn")
+        if (!IsTetrisOn) return
+
         if (timerId) {
             clearInterval(timerId)
-            pause = true
+            timerId = null
+            pauseIndicator.classList.remove('disable')
+            if (!isSoundIndicatorDisable()) {
+                tetrisSound.pause()
+                soundIndicator.classList.add('disable')
+            }
         } else {
-            speed = 650 / (level + 1)
-            timerId = setInterval(moveDown, speed)
+            timerId = setInterval(moveDown, 850 / (speedLevel + 1))
             showUpdatePreview()
-            speedDisplay.innerHTML = `- ${speeds[level]} -`
+            pauseIndicator.classList.add('disable')
         }
     })
 
     soundControl.addEventListener('click', () => {
-        isPlaying = tetrisSound.classList.contains('playing')
+        isNotPlaying = soundIndicator.classList.contains('disable')
         IsTetrisOn = powerControl.classList.contains("powerOn")
 
         if (IsTetrisOn) {
-            if (!isPlaying) {
+            if (isNotPlaying) {
                 tetrisSound.play()
-                tetrisSound.classList.add('playing')
+                soundIndicator.classList.remove('disable')
             } else {
                 tetrisSound.pause()
-                tetrisSound.currentTime = 0
-                tetrisSound.classList.remove('playing')
+                //tetrisSound.currentTime = 0
+                soundIndicator.classList.add('disable')
             }
         }
     })
@@ -261,8 +223,17 @@ document.addEventListener('DOMContentLoaded', () => {
             square.classList.remove("freezed")
         })
     }
-
+    function fillGrid() {
+        squares.forEach(square => {
+            square.classList.add("tetromino")
+        })
+    }
     function draw() {
+        IsTetrisOn = powerControl.classList.contains("powerOn")
+        if (!IsTetrisOn) return
+
+        //squares[position].classList.add('tetrominoL')
+
         if (timerId !== null) {
             tetrominoDisposition.forEach(index => {
                 squares[position + index].classList.add('tetromino')
@@ -274,6 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function undraw() {
+        IsTetrisOn = powerControl.classList.contains("powerOn")
+        if (!IsTetrisOn) return
+
+        //squares[position].classList.remove('tetrominoL')
+
         tetrominoDisposition.forEach(index => {
             squares[position + index].classList.remove('tetromino')
         })
@@ -297,34 +273,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function moveDown() {
+    function moveDown(step = width) {
         if (!isFreezedTetromino()) {
             undraw()
-            position += width
+            position += step
             draw()
             if (isAtBottom() || isTouchFreezedSquare()) {
-                console.log('check left right movement')
-
                 freezeCurrentTetrimino()
                 updateScore()
                 drawNextTetrimino()
-                isGameOver()
+                if (isFreezedTetromino()) gameOver()
             }
         }
     }
 
     function moveToBottom() {
-        console.log(tetrominoDisposition, position)
+        console.log('move to bottom')
     }
-
     function rotate() {
         if (!isFreezedTetromino()) {
             undraw()
             orientation++
             neworientation = orientation % tetrominoes[random].length
             tetrominoDisposition = tetrominoes[random][neworientation]
-            checkRotatedPosition()
-            rotationSound.play()
+            checkRotatedPosition() // TO DO
+            if (!isSoundIndicatorDisable()) rotationSound.play()
             draw()
         }
     }
@@ -344,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
             moveToBottom()
         }
     }
-    
+
     controlMoveLft.addEventListener('click', () => { moveLeft() })
     controlMoveRght.addEventListener('click', () => { moveRight() })
     controlMoveDown.addEventListener('click', () => { moveDown() })
@@ -352,23 +325,31 @@ document.addEventListener('DOMContentLoaded', () => {
     controlSpeed.addEventListener('click', () => { speedUp() })
 
     function speedUp() {
-        level++
-        level = level % speeds.length
-        speed = 850 / (level + 1)
+        IsTetrisOn = powerControl.classList.contains("powerOn")
+        if (!IsTetrisOn || !timerId) return
+
         clearInterval(timerId)
         timerId = null
-        timerId = setInterval(moveDown, speed)
-        speedDisplay.innerHTML = `- ${speeds[level]} -`
+        speedLevel++
+        speedLevel = speedLevel % 3
+        timerId = setInterval(moveDown, 850 / (speedLevel + 1))
     }
 
-    function checkRotatedPosition() {
-        if ((position + 1) % width < 4) {
-            if (isAtRight()) position++
+    function checkRotatedPosition(P){
+        P = P || position
+        if ((P+1) % width < 4) {
+          if (isAtRight()){
+            position++
+            checkRotatedPosition(P)
+            }
         }
-        else if (position % width > 5) {
-            if (isAtLeft()) position--
+        else if (P % width > 5) {
+          if (isAtLeft()){
+            position--
+            checkRotatedPosition(P)
+          }
         }
-    }
+      }
 
     function isAtRight() {
         return tetrominoDisposition.some(index => (position + index + 1) % width == 0)
@@ -400,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function freezeCurrentTetrimino() {
         tetrominoDisposition.forEach(index => squares[position + index].classList.add('freezed'))
-        fallSound.play()
+        if (!isSoundIndicatorDisable()) fallSound.play()
     }
 
     function drawNextTetrimino() {
@@ -416,52 +397,114 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateScore() {
-        for (let rowId = 0; rowId <= squares.length - width; rowId += width) {
-            const rowsSquares = [rowId + 0, rowId + 1, rowId + 2, rowId + 3, rowId + 4, rowId + 5, rowId + 6, rowId + 7, rowId + 8, rowId + 9]
+        const cleanDelay = 30
+        for (let rowId = 0; rowId < squares.length / width; rowId++) {
+
+            rowsSquares = Array(width).fill().map((_, id) => rowId * width + id)
 
             if (rowsSquares.every(index => squares[index].classList.contains('freezed'))) {
-                successSound.play()
+                if (!isSoundIndicatorDisable()) successSound.play()
                 score += width
-                scoreDisplay.innerHTML = `- ${score} -`
-                rowsSquares.forEach(index => {
-                    squares[index].classList.remove('freezed')
-                    squares[index].classList.remove('tetromino')
-                })
-                const squaresRemoved = squares.splice(rowId, width)
-                squares = squaresRemoved.concat(squares)
-                squares.forEach(square => mainGrid.appendChild(square))
+                scoreDisplay.innerHTML = score
+
+                if(score % levelWeight === 0){
+                    level++
+                    levelDisplay.innerHTML = levels[level]
+                    //if (!isSoundIndicatorDisable()) successSound.play()
+                }
+                leftPartOfRow = rowsSquares.slice(0, width / 2).reverse()
+                rightPartOfRow = rowsSquares.slice(width / 2)
+                cleanPath(leftPartOfRow, cleanDelay)
+                cleanPath(rightPartOfRow, cleanDelay)
+
+                setTimeout(() => {
+                    let squaresRemoved = squares.splice(rowId * width, width)
+                    squares = squaresRemoved.concat(squares)
+                    squares.forEach(square => mainGrid.appendChild(square))
+                    if(level === levels.length) gameOver('glory')
+                }, cleanDelay * width / 2)
             }
         }
     }
 
-    function isGameOver() {
-        if (isFreezedTetromino()) {
-            gameoverSound.play()
-            drawPath(generatePath(spiralRanges))
-        }
+    function gameOver(reson = 'loss') {
+        clearInterval(timerId)
+        timerId = null
+        clearPreview()
+        if (!isSoundIndicatorDisable() && loss) gameoverSound.play()
+        animation()
     }
 
     function generateRange(from, to, step = 1) {
         pathLength = (to - from) / step
-        return Array(pathLength + 1).fill().map((_, idx) => from + step * idx)
+        range = Array(pathLength + 1).fill().map((_, idx) => from + step * idx)
+        return range
     }
 
-    function drawPath(path, method) {
-
-        // the path is the sequence of indexes of square
-
+    function drawPath(path, timeInt = 10) {
         let id = 0
-        let timerPath = setInterval(function () {
-            if (id == path.length){
-                clearInterval(timerPath)
+        let drawTimer = setInterval(function () {
+            if (id == path.length) {
+                clearInterval(drawTimer)
                 return
             }
             squares[path[id]].classList.add('tetromino')
-            id ++
-        }, 10)
+            id++
+        }, timeInt)
+    }
+
+    function cleanPath(path, timeInt) {
+        let id = 0
+        let cleanTimer = setInterval(function () {
+            if (id == path.length) {
+                clearInterval(cleanTimer)
+                return
+            }
+            squares[path[id]].classList.remove('tetromino')
+            squares[path[id]].classList.remove('freezed')
+            id++
+        }, timeInt)
+    }
+
+    function animation(){
+        const drawDelay = 10
+        drawPath(spiral, drawDelay)
+        setTimeout(() => {
+            clearGrid()
+        }, drawDelay * squares.length + 500)
+        setTimeout(() => {
+            fillGrid()
+        }, drawDelay * squares.length + 1000)
+        setTimeout(() => {
+            clearGrid()
+        }, drawDelay * squares.length + 1500)
+        setTimeout(() => {
+            fillGrid()
+        }, drawDelay * squares.length + 2000)
+        setTimeout(() => {
+            clearGrid()
+        }, drawDelay * squares.length + 2500)
     }
 
     function getRandom() {
         return Math.floor(Math.random() * tetrominoes.length)
     }
+
+    function disableIndicators() {
+        [pauseIndicator, soundIndicator, resetIndicator].forEach(indicator => {
+            isDisable = indicator.classList.contains('disable')
+            if (!isDisable) {
+                indicator.classList.add('disable')
+            }
+        })
+    }
+    function isSoundIndicatorDisable() {
+        return soundIndicator.classList.contains('disable')
+    }
+    function init() {
+        levelDisplay.innerHTML = levels[level]
+        scoreDisplay.innerHTML = score
+    }
+
+    init()
 })

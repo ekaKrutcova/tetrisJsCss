@@ -13,6 +13,7 @@
     min-height: 300px;
     margin: 0 auto;
     display: flex;
+    justify-content: space-between;
     background-color: #a5ac8d;
     border: 30px solid #222;
     border-radius: 15px;
@@ -31,20 +32,43 @@
     font-size: 2em;
     background: #222;
     padding: 10px;
-} 
+}
+#screen:after{
+    content: "";
+    display: block;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-color: #000;
+    right: 90px;
+}
+.info{
+    display: grid;
+    align-content: space-between;
+}
 .screen_5-8_{
     width: 150px;
 }
 .screen_3-8_{
     width: 60px;
     padding: 15px;
-    font: 1em monospace;
-    text-transform: uppercase;
-}   
+}
 .grid{
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+}
+#indicatorsWrapper{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+#indicatorsWrapper .indicator{
+    font-size: 1.3em;
+    line-height: 1.3em;
+}
+#indicatorsWrapper .nameIndicator{
+    font-size: 0.55em;
 }
 .square{
     margin: 3px;
@@ -57,29 +81,31 @@
 }
 .preview{
     width: 60px;
+    margin: 0 auto;
 }
 .tetromino{
     outline: 2px solid #222;
     background: #222;
 }
+.tetrominoL{
+    outline: 2px solid red;
+    background: red;
+}
 #control-buttons{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     box-shadow: 0px 1px 5px rgb(0 0 0 / 50%) inset;
     border-radius: 30px;
     margin-top: 30px;
-    padding: 20px 40px 0;
+    padding: 15px 40px;
+}
+#control-buttons .screen_5-8_{
+    display: flex;
+    justify-content: space-between;
 }
 #move-buttons{
     display: grid;
     padding: 20px 40px 0;
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
-}
-#control-buttons .screen_5-8_{
-    display: flex;
-    justify-content: space-between;
 }
 .move-buttons{
     display: grid;
@@ -113,8 +139,7 @@ button{
     color: #d1c602;
 }
 .control p{
-    text-transform: uppercase;
-    font-size: 9px;
+    font-size: 0.6em;
     color: #fff;
     margin: 5px 0 0;
     text-align: center;
@@ -137,4 +162,10 @@ button{
 
 .disable{
     color: #9ea488;
+}
+p{
+    margin: 0px;
+}
+#level{
+    font-size: 1.9em;
 }
