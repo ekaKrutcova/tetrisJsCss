@@ -1,121 +1,175 @@
+:root {
+    --square_size: 15px;
+    --main_grid_width: 10;
+    --preview_grid_width: 4;
+    --square_color: #9ea488;
+    --screen_color: #a5ac8d;
+    --screen_padding: 5px;
+    --screen_border: 30px;
+    --tetris_color: #222;
+    --disabled_color: #9ea488;
+    --enabled_color: #222;
+    --button_color: #ff0;
+    --on_button_color: #0f0;
+    --off_button_color:  #f00;
+}
+@font-face{
+    font-family: "Digi";
+    src: url("DS-DIGI.TTF") format("truetype");
+}
+.square{
+    width: calc(var(--square_size) / 3);
+    height: calc(var(--square_size) / 3);
+    padding: 0;
+    border: calc(2 * var(--square_size) / 15) solid var(--screen_color);
+    margin: calc(var(--square_size) / 5);
+    outline: calc(2 * var(--square_size) / 15) solid var(--square_color);
+    background: var(--square_color);
+}
 #tetris{
-    width: 330px;
-    margin: 5px auto;
-    padding: 30px;
-    background-color: #222;
-    border-radius: 15px;
+    width: calc(var(--square_size) * 20);
+    padding: calc(var(--square_size) * 2);
+    border-radius: var(--square_size);
+    margin: 0 auto;
+    background-color: var(--tetris_color);
     font-family: monospace;
     color:#fff;
     text-transform: uppercase;
 }
 #screen{
-    width: 240px;
-    min-height: 300px;
+    width: calc(var(--square_size) * 14 + var(--screen_padding) * 2);
+    padding: var(--screen_padding);
+    border: var(--screen_border) solid var(--tetris_color);
+    border-radius: var(--square_size);
+    outline: 2px solid #fff;
     margin: 0 auto;
     display: flex;
-    background-color: #a5ac8d;
-    border: 30px solid #222;
-    border-radius: 15px;
-    outline: 2px solid white;
-    box-shadow: 0 0 5px black inset;
-    padding: 5px;
-    color: #000;
+    justify-content: space-between;
+    background-color: var(--screen_color);
+    box-shadow: 0 0 calc(var(--square_size) / 3) #000 inset;
+    color: #222;
     position: relative;
 } 
 #screen:before{
-    content: "SIMBA'S";
+    content: "SUPER";
     color: #fff;
     display: block;
     position: absolute;
     top: -55px;
     font-size: 2em;
-    background: #222;
+    background: var(--tetris_color);
     padding: 10px;
-} 
-.screen_5-8_{
-    width: 150px;
 }
-.screen_3-8_{
-    width: 60px;
-    padding: 15px;
-    font: 1em monospace;
-    text-transform: uppercase;
-}   
+#screen:after{
+    content: "";
+    display: block;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-color: #000;
+    left: calc(var(--square_size) * 10 + var(--screen_padding) * 2);
+}
+#main{
+    width: calc(var(--square_size) * var(--main_grid_width));
+}
+#info{
+    width: calc(var(--square_size) * var(--preview_grid_width));
+    display: grid;
+    align-content: space-between;
+    font-family: "Digi";
+}
+#info > div{
+    width: inherit;
+}
+#info > div > p{
+    line-height: var(--square_size);
+    padding: 0 0 var(--square_size);
+}
+#score{
+    line-height: var(--square_size);
+}
 .grid{
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
 }
-.square{
-    margin: 3px;
-    outline: 2px solid #9ea488;
-    border: 2px solid #a5ac8d;
-    padding: 2px;
-    width: 1px;
-    height: 1px;
-    background: #9ea488;
-}
-.preview{
-    width: 60px;
-}
 .tetromino{
-    outline: 2px solid #222;
-    background: #222;
+    outline: 2px solid var(--enabled_color);
+    background: var(--enabled_color);
 }
-#control-buttons{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0px 1px 5px rgb(0 0 0 / 50%) inset;
-    border-radius: 30px;
-    margin-top: 30px;
-    padding: 20px 40px 0;
-}
-#move-buttons{
-    display: grid;
-    padding: 20px 40px 0;
-    grid-template-columns: repeat(2, 1fr);
-    align-items: center;
-}
-#control-buttons .screen_5-8_{
+#level{
     display: flex;
     justify-content: space-between;
+    font-size: calc(4 * var(--square_size) / 5);
 }
-.move-buttons{
-    display: grid;
-    grid-template-areas:
-            "a a a" 
-            "b c d"
-            "e e e";
+#indicatorsWrapper{
+    display: flex;
+    text-align: center;
+    justify-content: space-around;
 }
-.control{
+#indicatorsWrapper .indicator{
+    font-size: 1.3em;
+    line-height: 1.3em;
+}
+#indicatorsWrapper .nameIndicator{
+    font-size: 0.45em;
+}
+#controlButtons{
+    width: calc(var(--square_size) * 16);
+    padding: var(--screen_padding);
     margin: 0 auto;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+#moveButtons{
+    width: calc(var(--square_size) * 16);
+    padding: 30px 0;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#moveButtonsX{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
 }
 button{
-    background: #fff200;
-    box-shadow: 0px 3px 2px #fff inset;
-    border: 1px solid #fff200; 
-    width: 20px;
-    height: 20px;
+    padding: 0;
+    border: 0;
+    background: var(--button_color);
     border-radius: 100%;
     cursor: pointer;
+    box-shadow: 0 4px #444;
 }
-.move-buttons button{
-    width: 35px;
-    height: 35px;
+.powerOn{
+    background: var(--on_button_color);
 }
-#rotate{
-    width: 70px;
-    height: 70px;
-    font-weight: 600;
-    text-shadow: 1px 1px #f9f7d3;
-    font-size: 1em;
-    color: #d1c602;
+.powerOff{
+    background: var(--off_button_color);
+}
+button:hover {
+    filter: contrast(1.2);
+}
+button:active {
+  box-shadow: 0 2px #111;
+  transform: translateY(2px);
+}
+#controlButtons button{
+    width: 25px;
+    height: 25px;
+}
+#moveButtons button{
+    width: 40px;
+    height: 40px;
+}
+button#rotate{
+    width: 85px;
+    height: 85px;
 }
 .control p{
-    text-transform: uppercase;
-    font-size: 9px;
-    color: #fff;
+    font-size: 0.6em;
     margin: 5px 0 0;
     text-align: center;
 }
@@ -123,18 +177,13 @@ button{
     font-size: 2em;
     padding: 0 30px;
 }
-
-.powerOff{
-    background: #f43131;
-    border: 1px solid red;
-    box-shadow: 0px 3px 2px #e39494 inset;
+.disabled{
+    color: var(--disabled_color);
 }
-
-.powerOn{
-    border: 1px solid #bcea00;
-    background: #94ee3c;
+.enabled{
+    color: var(--enabled_color);
 }
-
-.disable{
-    color: #9ea488;
+p{
+    margin: 0px;
+    text-overflow: ellipsis;
 }

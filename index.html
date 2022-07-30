@@ -14,8 +14,9 @@
             <audio id="fallSound" src="sounds/fall.wav" preload="auto"></audio> 
             <audio id="rotationSound" src="sounds/rotation.wav" preload="auto"></audio>
             <audio id="gameoverSound" src="sounds/gameover.wav" preload="auto"></audio>
+            <audio id="glorySound" src="sounds/glory.mp3" preload="auto"></audio>
             <div id="screen">
-                <div class="screen_5-8_ main grid">
+                <div id="main" class="grid">
                     <div class="square"></div>
                     <div class="square"></div>
                     <div class="square"></div>
@@ -217,58 +218,72 @@
                     <div class="square"></div>
                     <div class="square"></div>
                 </div>
-                <div class="screen_3-8_ info">
-                    <p>Next tetramino</p>
-                    <div class="preview grid">
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
-                        <div class="square"></div>
+                <div id="info">
+                    <div>
+                        <p>Next</p>
+                        <div id="preview" class="grid">
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                        </div>
                     </div>
-                    <p>Score</p>
-                    <div id="score">- 0 -</div>
-                    <p>Speed</p>
-                    <div id="speed">- 0 -</div>
+                    <div>
+                        <p>Score</p>
+                        <div id="score"></div>
+                    </div>
+                    <div>
+                        <p>Level</p>
+                        <div id="level">
+                            <p class="disabled">&starf;</p>
+                            <p class="disabled">&starf;</p>
+                            <p class="disabled">&starf;</p>
+                            <p class="disabled">&starf;</p>
+                            <p class="disabled">&starf;</p>
+                        </div>
+                    </div>
+                    <div id="indicatorsWrapper">
+                        <div><p id="gamePauseIndicator" class="indicator disabled">⏸︎</p><p class="nameIndicator">Pause</p></div>
+                        <div><p id="soundIndicator" class="indicator disabled">&sung;</p><p class="nameIndicator">Sound</p></div>
+                        <div><p id="resetIndicator" class="indicator disabled">&orarr;</p><p class="nameIndicator">Reset</p></div>
+                    </div>
                 </div>
             </div>
-            <div id="control-buttons">
-                <div class="screen_5-8_">
-                    <div class="control"><button id="power" class="powerOn"></button><p>On/Off</p></div>
+            <div id="controlButtons">
+                    <div class="control"><button id="powerControl" class="powerOn"></button><p>On/Off</p></div>
+                    <div class="control"><button id="startPauseControl"></button><p>Start/<br>Pause</p></div>
                     <div class="control"><button id="soundControl"></button><p>Sound</p></div>
-                    <div class="control"><button id="start"></button><p>Start</p></div>
-                </div>
-                <div class="screen_3-8_"></div>
+                    <div class="control"><button id="resetControl"></button><p>Reset</p></div>
             </div>
-            <div id="move-buttons">
-                <div class="y">
-                    <div class="control"><button id="rotate">Rotate</button></div> 
-                </div>
-                <div class="move-buttons">
-                    <div class="control"></div>
+            <div id="moveButtons">
+                <div id="moveButtonsX">
+                    <div></div>
                     <div class="control"><button id="speedUp"></button><p>Speed Up</p></div>
-                    <div class="control"></div>
+                    <div></div>
                     <div class="control"><button id="moveLft"></button><p>Left</p></div>
-                    <div class="control"></div>
+                    <div></div>
                     <div class="control"><button id="moveRght"></button><p>Right</p></div>
-                    <div class="control"></div>
+                    <div></div>
                     <div class="control"><button id="moveDown"></button><p>Down</p></div>
-                    <div class="control "></div>
+                    <div></div>
+                </div>
+                <div>
+                    <div class="control"><button id="rotate"></button></div>
                 </div>
             </div>
             <div id="logo">Brick Games</div>
-            </div>
         </div>
     </body>
 </html>
