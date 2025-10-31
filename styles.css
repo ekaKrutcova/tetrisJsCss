@@ -29,7 +29,7 @@
 #tetris{
     width: calc(var(--square_size) * 20);
     padding: calc(var(--square_size) * 2);
-    border-radius: var(--square_size);
+    border-radius: calc(var(--square_size) * 2);
     margin: 0 auto;
     background-color: var(--tetris_color);
     font-family: monospace;
@@ -97,7 +97,7 @@
     outline: 2px solid var(--enabled_color);
     background: var(--enabled_color);
 }
-#level{
+#levelsWrapper{
     display: flex;
     justify-content: space-between;
     font-size: calc(4 * var(--square_size) / 5);
@@ -116,16 +116,17 @@
 }
 #controlButtons{
     width: calc(var(--square_size) * 16);
-    padding: var(--screen_padding);
-    margin: 0 auto;
-    margin-top: 30px;
+    margin: 30px auto;
     display: flex;
     justify-content: space-around;
 }
+#controlButtons > div > p{
+    font-size: calc(var(--square_size) / 1.5);
+    margin: var(--square_size) auto 0;
+}
 #moveButtons{
     width: calc(var(--square_size) * 16);
-    padding: 30px 0;
-    margin: 0 auto;
+    margin: 30px auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -156,22 +157,18 @@ button:active {
   box-shadow: 0 2px #111;
   transform: translateY(2px);
 }
+
 #controlButtons button{
-    width: 25px;
-    height: 25px;
+    width: calc(var(--square_size) * 2);
+    height: calc(var(--square_size) * 2);
 }
 #moveButtons button{
-    width: 40px;
-    height: 40px;
+    width: calc(var(--square_size) * 2.5);
+    height: calc(var(--square_size) * 2.5);
 }
 button#rotate{
-    width: 85px;
-    height: 85px;
-}
-.control p{
-    font-size: 0.6em;
-    margin: 5px 0 0;
-    text-align: center;
+    width: calc(var(--square_size) * 5);
+    height: calc(var(--square_size) * 5);
 }
 #logo{
     font-size: 2em;
